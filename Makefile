@@ -1,8 +1,10 @@
 run:
-	docker run -p 80:80 --name asterisk-prod nazark0/asterisk --volume $HOME/projects/docker-asterisk-prod/configs:/usr/local/src/asterisk/configs
+	docker build -t nazark0/asterisk . && docker run --rm -p 5060:5060 --name asterisk-dev \
+	-v ${PWD}/logs:/var/log/asterisk \
+	nazark0/asterisk
 stop:
-	docker stop asterisk-prod && docker rm asterisk-prod
+	docker stop asterisk-dev
 console:
-	docker exec -it asterisk-prod bash
+	docker exec -it asterisk-dev sh
 logs:
-	docker logs asterisk-prod
+	docker logs asterisk-dev
