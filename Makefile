@@ -1,4 +1,5 @@
 run:
+	./preinstall.sh
 	docker build -t nazark0/asterisk . && docker run --rm \
 	-p 5060:5060 \
 	-p 5061:5061 \
