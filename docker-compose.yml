@@ -1,0 +1,25 @@
+services:
+  asterisk:
+    build: .
+    restart: always
+    container_name: asterisk-dev
+    network_mode: "host"
+    hostname: "asterisk"
+    volumes:
+      - ./logs:/var/log/asterisk
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    container_name: db-ns
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "jtyuajrqwzdl"
+      POSTGRES_USER: admin
+      POSTGRES_DB: asterisk
+    volumes:
+      - db-volume:/data/db
+volumes:
+  db-volume:
