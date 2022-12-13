@@ -1,6 +1,8 @@
 services:
   asterisk:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.ast
     restart: always
     container_name: asterisk-dev
     network_mode: "host"
@@ -10,7 +12,9 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.pg
     container_name: db-ns
     restart: always
     ports:
@@ -18,8 +22,15 @@ services:
     environment:
       POSTGRES_PASSWORD: "jtyuajrqwzdl"
       POSTGRES_USER: admin
-      POSTGRES_DB: asterisk
     volumes:
       - db-volume:/data/db
+  adminer:
+    image: adminer
+    container_name: pg-adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
 volumes:
   db-volume:
