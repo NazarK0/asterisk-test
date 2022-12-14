@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.ast
     restart: always
+    network_mode: "host"
     container_name: asterisk-dev
     hostname: "asterisk"
     volumes:
@@ -11,15 +12,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    links:
-      - db
-    ports:
-      - 5060:5060/udp
-      - 5061:5061/udp
-      - 5160:5160/udp
-      - 5161:5161/udp
-      - 4569:4569/udp
-      - 3478:3478/udp
   db:
     build:
       context: .
@@ -39,6 +31,9 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+    networks:
+      ns-net:
+        ipv4_address: 172.16.238.5
   adminer:
     image: adminer
     container_name: pg-adminer
@@ -49,5 +44,13 @@ services:
       - db
     links:
       - db
+    networks:
+      - ns-net
 volumes:
   db-volume:
+networks:
+  ns-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/26"
