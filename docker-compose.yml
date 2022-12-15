@@ -10,8 +10,7 @@ services:
     volumes:
       - ./logs:/var/log/asterisk
     depends_on:
-      db:
-        condition: service_healthy
+      - db
   db:
     build:
       context: .
