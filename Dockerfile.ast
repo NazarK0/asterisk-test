@@ -1,6 +1,7 @@
 FROM andrius/asterisk
 
 WORKDIR /etc/asterisk
+RUN rm -rf ./*
 COPY configs .
 WORKDIR /var/lib/asterisk/sounds/
 COPY sounds .
