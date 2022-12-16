@@ -1,16 +1,20 @@
 FROM andrius/asterisk
 
 RUN apk add --update --no-cache python3 py3-pip
-RUN pip3 install psycopg2-binary
+RUN pip3 install psycopg2-binary alembic
 
 WORKDIR /etc/asterisk
 RUN rm -rf ./*
 COPY configs .
 WORKDIR /var/lib/asterisk/sounds/
 COPY sounds .
+WORKDIR /etc
+COPY odbc.ini .
 RUN apk add --update less psqlodbc asterisk-odbc asterisk-pgsql \
   &&  rm -rf /var/cache/apk/*
-WORKDIR /
+# WORKDIR /etc/asterisk/db-manage
+# RUN alembic -c alembic.ini upgrade head
 # necessary wrapping script for checking database status
+WORKDIR /
 COPY wait-for-postgres.py .
 ENTRYPOINT ["/usr/bin/python3", "wait-for-postgres.py", "--host", "172.16.238.5", "--command", "./docker-entrypoint.sh"]

@@ -24,6 +24,8 @@ def postgres_test(db, user, host, password):
         return False
 
 def docker_executor(command):
+    os.system("alembic -c /etc/asterisk/db-manage/alembic.ini upgrade head")
+    sleep(args.timeout * 20)
     os.system(" ".join(command))
 
 if __name__ == "__main__":
